@@ -2,22 +2,25 @@
 namespace App\Traits;
 use Illuminate\Database\Eloquent\Builder;
 
-trait HasCompositePrimaryKeyTrait{
+trait HasCompositePrimaryKeyTrait
+{
 
     //Get the value indicating whether the IDs are incrementing.
-    public function getIncrementing(){
+    public function getIncrementing()
+    {
         return false;
     }
 
 
     //Set the keys for a save update query.
-    protected function setKeysForSaveQuery($query){ //edit Builder $query to $query
+    protected function setKeysForSaveQuery($query)
+    { //edit Builder $query to $query
 
         foreach ($this->getKeyName() as $key) {
             // UPDATE: Added isset() per devflow's comment.
-            if (isset($this->$key)){
+            if (isset($this->$key)) {
                 $query->where($key, '=', $this->$key);
-            }else
+            } else
                 throw new Exception(__METHOD__ . 'Missing part of the primary key: ' . $key);
         }
         return $query;
@@ -27,7 +30,7 @@ trait HasCompositePrimaryKeyTrait{
     protected function getKeyForSaveQuery($keyName = null)
     {
 
-        if(is_null($keyName)){
+        if (is_null($keyName)) {
             $keyName = $this->getKeyName();
         }
 
@@ -40,7 +43,8 @@ trait HasCompositePrimaryKeyTrait{
 
 
     //Execute a query for a single record by ID.
-    public static function find($ids, $columns = ['*']){
+    public static function find($ids, $columns = ['*'])
+    {
         $me = new self;
         $query = $me->newQuery();
 
@@ -50,3 +54,5 @@ trait HasCompositePrimaryKeyTrait{
 
         return $query->first($columns);
     }
+
+}
